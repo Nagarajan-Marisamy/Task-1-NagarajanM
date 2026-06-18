@@ -1,64 +1,170 @@
 # Task-1-NagarajanM
-# Password Integrity Checker
+# 🔐 Password Integrity Checker
 
-A Python-based command-line tool designed to evaluate password strength, safely hash passwords using industry-standard algorithms, and protect sensitive data in memory. It acts as a multi-phase security gatekeeper to ensure users implement strong credentials.
-
-## 🚀 Features
-
-The application processes security in three distinct phases:
-
-### 1. Phase 1: The Gatekeeper (Validation & Scoring)
-* **Length Check:** Rejects any password shorter than 8 characters.
-* **Common Password Blacklist:** Prevents the use of notoriously weak/common passwords (e.g., `password123`, `qwerty`).
-* **Complexity Scoring:** Rates the password out of 5 based on length and character diversity (uppercase, lowercase, digits, and special characters).
-* **Smart Feedback:** Provides actionable recommendations if your password is lacking a specific character type.
-* **Weak Password Block:** Immediately terminates execution if the password scores 2 or less.
-
-### 2. Phase 2: Secure Hashing
-* Utilizes **Argon2id** (via the `argon2-cffi` library), the winner of the Password Hashing Competition, to safely hash the validated password against brute-force and GPU-accelerated attacks.
-
-### 3. Phase 3: Post-Hash Protections
-* **Timing Attack Mitigation:** Generates a secure session token via the `secrets` module and uses `hmac.compare_digest` to prevent timing side-channel attacks during verification.
-* **Memory Zeroization:** Converts the password into a mutable `bytearray` and explicitly overwrites it with null bytes (`\x00`) in RAM before garbage collection to minimize the risk of memory dumping attacks.
+A Python-based **Password Integrity Checker** that evaluates password strength, blocks weak/common passwords, securely hashes passwords using **Argon2id**, protects token verification against timing attacks, and securely wipes sensitive password data from memory after use.
 
 ---
 
-## 🛠️ Prerequisites & Installation
+## 📌 Features
 
-Before running the script, ensure you have Python 3.x installed along with the `argon2-cffi` dependency.
+### Phase 1 – Password Validation (Gatekeeper)
 
-1. Clone this repository:
-   ```bash
-   git clone [https://github.com/Nagarajan-Marisamy/Task-1-NagarajanM.git](https://github.com/Nagarajan-Marisamy/Task-1-NagarajanM.git)
-   cd Task-1-NagarajanM
-Install the required dependencies:
+The program performs the following security checks before accepting a password:
 
-Bash
+- Minimum password length validation (at least 8 characters)
+- Detection of commonly used passwords
+- Password complexity analysis
+- Password strength scoring
+
+The score is calculated based on:
+
+- Presence of lowercase letters
+- Presence of uppercase letters
+- Presence of digits
+- Presence of special characters
+- Meeting the minimum length requirement
+
+Password strength levels:
+
+| Score | Strength |
+|---------|----------|
+| 0–2 | Weak |
+| 3–4 | Medium |
+| 5 | Strong |
+
+Weak passwords are rejected before proceeding to the hashing stage.
+
+---
+
+### Phase 2 – Secure Password Hashing
+
+The program uses **Argon2id** to hash passwords.
+
+Argon2id is considered one of the most secure password hashing algorithms because it:
+
+- Resists brute-force attacks
+- Uses memory-hard computations
+- Automatically generates a unique salt
+- Is recommended by modern security standards
+
+The original password is never stored after hashing.
+
+---
+
+### Phase 3 – Timing Attack Protection
+
+The program generates a cryptographically secure session token using Python's `secrets` module.
+
+Token verification is performed using:
+
+```python
+hmac.compare_digest()
+```
+
+This method helps prevent timing attacks by ensuring comparisons take a constant amount of time regardless of how much of the token matches.
+
+---
+
+### Secure Memory Cleanup
+
+After all operations are completed, the password stored in memory is overwritten with zeros and deleted.
+
+This helps reduce the possibility of sensitive data remaining in RAM after program execution.
+
+---
+
+## 🛠 Technologies Used
+
+- Python 3
+- Argon2id (`argon2-cffi`)
+- HMAC (`hmac`)
+- Secrets (`secrets`)
+
+---
+
+## 📦 Installation
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/password-integrity-checker.git
+```
+
+### Navigate to the Project Folder
+
+```bash
+cd password-integrity-checker
+```
+
+### Install Required Dependency
+
+```bash
 pip install argon2-cffi
-💻 Usage
-Run the script from your terminal:
+```
 
-Bash
+---
+
+## ▶️ Running the Program
+
+```bash
 python password_checker.py
-Example Walkthrough
-Plaintext
+```
+
+---
+
+## Example Execution
+
+```text
 WELCOME TO PASSWORD INTEGRITY CHECKER
 Do you want to check your password's integrity
 Type 1 to Continue and 0 to Close the program: 1
-Enter Your Password: •••••••••••••
+
+Enter Your Password: MySecure@123
 
 Your password score is : 5 / 5
 Strong password strength
 
 Password is hashed using Argon2id
-$argon2id$v=19$m=65536,t=3,p=4$6F...
+$argon2id$v=19$m=65536,t=3,p=4$...
 
-Your session token is : 4a2b9c...
-Enter your session token: 4a2b9c...
+Your session token is : 5e6a9b7c2d8f4e1a9c3d7f0b1e2a4c6d
+
+Enter your session token:
 Token verified successfully
 
 Password securely wiped from memory
-🔒 Security Architecture Notes
-Why Argon2id? Unlike older algorithms like MD5 or SHA-256 (which are fast and optimized for hardware, making them vulnerable to GPU cracking), Argon2id is memory-hard, making it highly resistant to specialized ASIC/GPU password-cracking rigs.
+```
 
-Memory Hygiene: Simply running del password in Python doesn't immediately clear data from physical RAM due to how the garbage collector works. By modifying a mutable bytearray in-place (password[:] = b'\x00' * len(password)), this script actively destroys the plaintext footprint.
+---
+
+## 🔒 Security Concepts Demonstrated
+
+This project demonstrates several important cybersecurity concepts:
+
+- Password strength validation
+- Common password blacklisting
+- Secure password hashing
+- Cryptographic token generation
+- Timing attack mitigation
+- Secure memory handling
+
+---
+
+## 📚 Learning Objectives
+
+The goal of this project is to understand and practice:
+
+- Secure password management
+- Cryptographic hashing techniques
+- Authentication security
+- Python security programming
+- Defensive coding practices
+
+---
+
+## ⚠️ Disclaimer
+
+This project was created for educational and learning purposes. It demonstrates fundamental security concepts but should not be considered a complete authentication system for production environments without additional security controls.
+
+---
+
