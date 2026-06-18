@@ -29,7 +29,7 @@ Before running the script, ensure you have Python 3.x installed along with the `
 
 1. Clone this repository:
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
+   git clone [https://github.com/Nagarajan-Marisamy/Task-1-NagarajanM.git](https://github.com/Nagarajan-Marisamy/Task-1-NagarajanM.git)
    cd YOUR_REPO_NAME
 Install the required dependencies:
 
