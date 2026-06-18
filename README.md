@@ -1,5 +1,5 @@
 # Task-1-NagarajanM
-# Password Integrity Checker & Securer
+# Password Integrity Checker
 
 A Python-based command-line tool designed to evaluate password strength, safely hash passwords using industry-standard algorithms, and protect sensitive data in memory. It acts as a multi-phase security gatekeeper to ensure users implement strong credentials.
 
@@ -30,7 +30,7 @@ Before running the script, ensure you have Python 3.x installed along with the `
 1. Clone this repository:
    ```bash
    git clone [https://github.com/Nagarajan-Marisamy/Task-1-NagarajanM.git](https://github.com/Nagarajan-Marisamy/Task-1-NagarajanM.git)
-   cd YOUR_REPO_NAME
+   cd Task-1-NagarajanM
 Install the required dependencies:
 
 Bash
