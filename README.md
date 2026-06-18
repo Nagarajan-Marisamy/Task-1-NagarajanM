@@ -1,137 +1,64 @@
 # Task-1-NagarajanM
-Password Integrity Checker
+# Password Integrity Checker & Securer
 
-A Python-based Password Integrity Checker that evaluates password strength, blocks weak and common passwords, securely hashes passwords using Argon2id, protects token verification against timing attacks, and performs basic memory cleanup after processing.
+A Python-based command-line tool designed to evaluate password strength, safely hash passwords using industry-standard algorithms, and protect sensitive data in memory. It acts as a multi-phase security gatekeeper to ensure users implement strong credentials.
 
-Features
-Phase 1: Gatekeeper (Password Validation)
-1. Minimum Length Check
-Ensures the password is at least 8 characters long.
-Rejects shorter passwords immediately.
-2. Common Password Detection
-Compares the entered password against a list of frequently used passwords.
-Prevents the use of easily guessable passwords such as:
-password
-password123
-12345678
-qwerty123
-admin123
-etc.
-3. Password Strength Scoring
+## 🚀 Features
 
-The password is evaluated based on:
+The application processes security in three distinct phases:
 
-Requirement	Score
-Contains lowercase letters	+1
-Contains uppercase letters	+1
-Contains digits	+1
-Contains special characters	+1
-Length ≥ 8 characters	+1
+### 1. Phase 1: The Gatekeeper (Validation & Scoring)
+* **Length Check:** Rejects any password shorter than 8 characters.
+* **Common Password Blacklist:** Prevents the use of notoriously weak/common passwords (e.g., `password123`, `qwerty`).
+* **Complexity Scoring:** Rates the password out of 5 based on length and character diversity (uppercase, lowercase, digits, and special characters).
+* **Smart Feedback:** Provides actionable recommendations if your password is lacking a specific character type.
+* **Weak Password Block:** Immediately terminates execution if the password scores 2 or less.
 
-Maximum Score: 5/5
+### 2. Phase 2: Secure Hashing
+* Utilizes **Argon2id** (via the `argon2-cffi` library), the winner of the Password Hashing Competition, to safely hash the validated password against brute-force and GPU-accelerated attacks.
 
-4. Password Strength Classification
-Score	Classification
-0 – 2	Weak (Rejected)
-3 – 4	Medium
-5	Strong
+### 3. Phase 3: Post-Hash Protections
+* **Timing Attack Mitigation:** Generates a secure session token via the `secrets` module and uses `hmac.compare_digest` to prevent timing side-channel attacks during verification.
+* **Memory Zeroization:** Converts the password into a mutable `bytearray` and explicitly overwrites it with null bytes (`\x00`) in RAM before garbage collection to minimize the risk of memory dumping attacks.
 
-The program also provides recommendations for missing password components.
+---
 
-Phase 2: Secure Password Hashing (Argon2id)
+## 🛠️ Prerequisites & Installation
 
-Passwords are hashed using Argon2id, which is recommended by modern security standards and the OWASP Password Storage Cheat Sheet.
+Before running the script, ensure you have Python 3.x installed along with the `argon2-cffi` dependency.
 
-Benefits:
+1. Clone this repository:
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
+   cd YOUR_REPO_NAME
+Install the required dependencies:
 
-Resistant to brute-force attacks
-Memory-hard algorithm
-Industry-standard password hashing method
-Generates a unique salt automatically
-
-Example hash:
-
-$argon2id$v=19$m=65536,t=3,p=4$...
-Phase 3: Timing Attack Mitigation
-
-The program generates a secure session token using Python's secrets module:
-
-session_token = secrets.token_hex(16)
-
-Token verification is performed using:
-
-hmac.compare_digest()
-
-This prevents timing-based side-channel attacks by ensuring comparisons take constant time.
-
-Secure Memory Cleanup
-
-After processing:
-
-The password is stored in a mutable bytearray
-The contents are overwritten with zeros
-Variables containing the password are deleted
-
-Example:
-
-password[:] = b'\x00' * len(password)
-del password
-del password_input
-
-This reduces the chance of sensitive data remaining in memory longer than necessary.
-
-Installation
-1. Clone the Repository
-git clone https://github.com/yourusername/password-integrity-checker.git
-cd password-integrity-checker
-2. Install Dependencies
+Bash
 pip install argon2-cffi
-Usage
+💻 Usage
+Run the script from your terminal:
 
-Run the program:
-
+Bash
 python password_checker.py
-
-Example:
-
+Example Walkthrough
+Plaintext
 WELCOME TO PASSWORD INTEGRITY CHECKER
 Do you want to check your password's integrity
 Type 1 to Continue and 0 to Close the program: 1
-
-Enter Your Password: MySecure@123
+Enter Your Password: •••••••••••••
 
 Your password score is : 5 / 5
 Strong password strength
 
 Password is hashed using Argon2id
-$argon2id$v=19$m=65536,t=3,p=4$...
+$argon2id$v=19$m=65536,t=3,p=4$6F...
 
-Your session token is : 4f7a2c5f1e8b...
-Enter your session token:
+Your session token is : 4a2b9c...
+Enter your session token: 4a2b9c...
 Token verified successfully
 
 Password securely wiped from memory
-Technologies Used
-Python 3
-Argon2id (argon2-cffi)
-HMAC (hmac.compare_digest)
-Cryptographically secure token generation (secrets)
-Security Concepts Demonstrated
-Password validation
-Password strength assessment
-Common password filtering
-Secure password hashing (Argon2id)
-Timing attack mitigation
-Secure random token generation
-Basic memory sanitization
-Project Purpose
+🔒 Security Architecture Notes
+Why Argon2id? Unlike older algorithms like MD5 or SHA-256 (which are fast and optimized for hardware, making them vulnerable to GPU cracking), Argon2id is memory-hard, making it highly resistant to specialized ASIC/GPU password-cracking rigs.
 
-This project was developed as a cybersecurity learning exercise to demonstrate practical implementation of:
-
-Authentication security principles
-Secure password handling
-Password hashing techniques
-Defensive coding practices
-Basic cryptographic protections
-
-It is intended for educational purposes and can serve as a foundation for more advanced authentication systems.
+Memory Hygiene: Simply running del password in Python doesn't immediately clear data from physical RAM due to how the garbage collector works. By modifying a mutable bytearray in-place (password[:] = b'\x00' * len(password)), this script actively destroys the plaintext footprint.
