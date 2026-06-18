@@ -87,7 +87,7 @@ This helps reduce the possibility of sensitive data remaining in RAM after progr
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/password-integrity-checker.git
+git clone https://github.com/Nagarajan-Marisamy/Task-1-NagarajanM.git
 ```
 
 ### Navigate to the Project Folder
