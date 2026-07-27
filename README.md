@@ -1,4 +1,4 @@
-# Task-1-NagarajanM
+
 # 🔐 Password Integrity Checker
 
 A Python-based **Password Integrity Checker** that evaluates password strength, blocks weak/common passwords, securely hashes passwords using **Argon2id**, protects token verification against timing attacks, and securely wipes sensitive password data from memory after use.
